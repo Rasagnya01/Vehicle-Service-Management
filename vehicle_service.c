@@ -1,1 +1,387 @@
-#include <stdio.h>#include <string.h>struct Vehicle{    char number[20];    char owner[50];    char type[20];    char model[50];    char service[50];    float charge;    char status[20];};struct Vehicle v[100];int count = 0;/* Function to read a string */void readString(char str[], int size){    fgets(str, size, stdin);    str[strcspn(str, "\n")] = '\0';}/* Search vehicle using number */int searchIndex(char num[]){    int i;    for (i = 0; i < count; i++)    {        if (strcmp(v[i].number, num) == 0)            return i;    }    return -1;}/* Function to add vehicle */void addVehicle(){    char num[20];    if (count == 100)    {        printf("Vehicle storage is full!\n");        return;    }    printf("Enter Vehicle Number: ");    readString(num, sizeof(num));    if (searchIndex(num) != -1)    {        printf("Vehicle number already exists!\n");        return;    }    strcpy(v[count].number, num);    printf("Enter Owner Name: ");    readString(v[count].owner, sizeof(v[count].owner));    printf("Enter Vehicle Type (Car/Bike/Other): ");    readString(v[count].type, sizeof(v[count].type));    printf("Enter Vehicle Model: ");    readString(v[count].model, sizeof(v[count].model));    printf("Enter Service Type: ");    readString(v[count].service, sizeof(v[count].service));    printf("Enter Service Charge: ");    scanf("%f", &v[count].charge);    getchar();    while (v[count].charge < 0)    {        printf("Charge cannot be negative. Enter again: ");        scanf("%f", &v[count].charge);        getchar();    }    strcpy(v[count].status, "Pending");    count++;    printf("Vehicle added successfully!\n");}/* Function to display one vehicle */void displayOne(int i){    printf("\nVehicle Number : %s", v[i].number);    printf("\nOwner Name     : %s", v[i].owner);    printf("\nVehicle Type   : %s", v[i].type);    printf("\nVehicle Model  : %s", v[i].model);    printf("\nService Type   : %s", v[i].service);    printf("\nService Charge : %.2f", v[i].charge);    printf("\nService Status : %s\n", v[i].status);}/* Function to display all vehicles */void displayVehicles(){    int i;    if (count == 0)    {        printf("No vehicle records found!\n");        return;    }    for (i = 0; i < count; i++)    {        printf("\n--- Vehicle %d ---", i + 1);        displayOne(i);    }}/* Function to search vehicle */void searchVehicle(){    char num[20];    int index;    printf("Enter Vehicle Number to search: ");    readString(num, sizeof(num));    index = searchIndex(num);    if (index == -1)        printf("Vehicle not found!\n");    else        displayOne(index);}/* Function to update vehicle details */void updateVehicle(){    char num[20];    int index;    printf("Enter Vehicle Number to update: ");    readString(num, sizeof(num));    index = searchIndex(num);    if (index == -1)    {        printf("Vehicle not found!\n");        return;    }    printf("Enter New Owner Name: ");    readString(v[index].owner, sizeof(v[index].owner));    printf("Enter New Vehicle Type: ");    readString(v[index].type, sizeof(v[index].type));    printf("Enter New Vehicle Model: ");    readString(v[index].model, sizeof(v[index].model));    printf("Enter New Service Type: ");    readString(v[index].service, sizeof(v[index].service));    printf("Enter New Service Charge: ");    scanf("%f", &v[index].charge);    getchar();    while (v[index].charge < 0)    {        printf("Charge cannot be negative. Enter again: ");        scanf("%f", &v[index].charge);        getchar();    }    printf("Vehicle details updated successfully!\n");}/* Function to delete vehicle */void deleteVehicle(){    char num[20];    int index, i;    printf("Enter Vehicle Number to delete: ");    readString(num, sizeof(num));    index = searchIndex(num);    if (index == -1)    {        printf("Vehicle not found!\n");        return;    }    for (i = index; i < count - 1; i++)    {        v[i] = v[i + 1];    }    count--;    printf("Vehicle deleted successfully!\n");}/* Separate function to complete service */void completeService(){    char num[20];    int index;    printf("Enter Vehicle Number: ");    readString(num, sizeof(num));    index = searchIndex(num);    if (index == -1)    {        printf("Vehicle not found!\n");        return;    }    strcpy(v[index].status, "Completed");    printf("Service completed successfully!\n");}/* Function to display pending services */void pendingServices(){    int i, found = 0;    for (i = 0; i < count; i++)    {        if (strcmp(v[i].status, "Pending") == 0)        {            displayOne(i);            found = 1;        }    }    if (found == 0)        printf("No pending services!\n");}/* Function to calculate total revenue */void totalRevenue(){    int i;    float total = 0;    for (i = 0; i < count; i++)    {        if (strcmp(v[i].status, "Completed") == 0)        {            total = total + v[i].charge;        }    }    printf("Total Revenue = Rs. %.2f\n", total);}/* Function to count vehicle types */void vehicleTypeCount(){    int i, cars = 0, bikes = 0, others = 0;    for (i = 0; i < count; i++)    {        if (strcmp(v[i].type, "Car") == 0 ||            strcmp(v[i].type, "car") == 0)            cars++;        else if (strcmp(v[i].type, "Bike") == 0 ||                 strcmp(v[i].type, "bike") == 0)            bikes++;        else            others++;    }    printf("\nCars  : %d", cars);    printf("\nBikes : %d", bikes);    printf("\nOthers: %d\n", others);}/* Function to find highest service charge */void highestCharge(){    int i, max = 0;    if (count == 0)    {        printf("No vehicle records found!\n");        return;    }    for (i = 1; i < count; i++)    {        if (v[i].charge > v[max].charge)            max = i;    }    printf("\nVehicle with Highest Service Charge:\n");    displayOne(max);}/* Main function */int main(){    int choice;    do    {        printf("\n===== VEHICLE SERVICE MANAGEMENT SYSTEM =====\n");        printf("1. Add Vehicle\n");        printf("2. Display Vehicles\n");        printf("3. Search Vehicle\n");        printf("4. Update Vehicle\n");        printf("5. Delete Vehicle\n");        printf("6. Complete Service\n");        printf("7. Pending Services\n");        printf("8. Total Revenue\n");        printf("9. Vehicle Type Count\n");        printf("10. Highest Service Charge\n");        printf("11. Exit\n");        printf("Enter your choice: ");        scanf("%d", &choice);        getchar();        switch (choice)        {            case 1:                addVehicle();                break;            case 2:                displayVehicles();                break;            case 3:                searchVehicle();                break;            case 4:                updateVehicle();                break;            case 5:                deleteVehicle();                break;            case 6:                completeService();                break;            case 7:                pendingServices();                break;            case 8:                totalRevenue();                break;            case 9:                vehicleTypeCount();                break;            case 10:                highestCharge();                break;            case 11:                printf("Exiting program...\n");                break;            default:                printf("Invalid choice! Try again.\n");        }    } while (choice != 11);    return 0;}
+#include <stdio.h>
+#include <string.h>
+
+struct Vehicle
+{
+    char number[20];
+    char owner[50];
+    char type[20];
+    char model[50];
+    char service[50];
+    float charge;
+    char status[20];
+};
+
+struct Vehicle v[100];
+int count = 0;
+
+/* Function to read a string */
+void readString(char str[], int size)
+{
+    fgets(str, size, stdin);
+    str[strcspn(str, "\n")] = '\0';
+}
+
+/* Search vehicle using number */
+int searchIndex(char num[])
+{
+    int i;
+
+    for (i = 0; i < count; i++)
+    {
+        if (strcmp(v[i].number, num) == 0)
+            return i;
+    }
+
+    return -1;
+}
+
+/* Function to add vehicle */
+void addVehicle()
+{
+    char num[20];
+
+    if (count == 100)
+    {
+        printf("Vehicle storage is full!\n");
+        return;
+    }
+
+    printf("Enter Vehicle Number: ");
+    readString(num, sizeof(num));
+
+    if (searchIndex(num) != -1)
+    {
+        printf("Vehicle number already exists!\n");
+        return;
+    }
+
+    strcpy(v[count].number, num);
+
+    printf("Enter Owner Name: ");
+    readString(v[count].owner, sizeof(v[count].owner));
+
+    printf("Enter Vehicle Type (Car/Bike/Other): ");
+    readString(v[count].type, sizeof(v[count].type));
+
+    printf("Enter Vehicle Model: ");
+    readString(v[count].model, sizeof(v[count].model));
+
+    printf("Enter Service Type: ");
+    readString(v[count].service, sizeof(v[count].service));
+
+    printf("Enter Service Charge: ");
+    scanf("%f", &v[count].charge);
+    getchar();
+
+    while (v[count].charge < 0)
+    {
+        printf("Charge cannot be negative. Enter again: ");
+        scanf("%f", &v[count].charge);
+        getchar();
+    }
+
+    strcpy(v[count].status, "Pending");
+
+    count++;
+
+    printf("Vehicle added successfully!\n");
+}
+
+/* Function to display one vehicle */
+void displayOne(int i)
+{
+    printf("\nVehicle Number : %s", v[i].number);
+    printf("\nOwner Name     : %s", v[i].owner);
+    printf("\nVehicle Type   : %s", v[i].type);
+    printf("\nVehicle Model  : %s", v[i].model);
+    printf("\nService Type   : %s", v[i].service);
+    printf("\nService Charge : %.2f", v[i].charge);
+    printf("\nService Status : %s\n", v[i].status);
+}
+
+/* Function to display all vehicles */
+void displayVehicles()
+{
+    int i;
+
+    if (count == 0)
+    {
+        printf("No vehicle records found!\n");
+        return;
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        printf("\n--- Vehicle %d ---", i + 1);
+        displayOne(i);
+    }
+}
+
+/* Function to search vehicle */
+void searchVehicle()
+{
+    char num[20];
+    int index;
+
+    printf("Enter Vehicle Number to search: ");
+    readString(num, sizeof(num));
+
+    index = searchIndex(num);
+
+    if (index == -1)
+        printf("Vehicle not found!\n");
+    else
+        displayOne(index);
+}
+
+/* Function to update vehicle details */
+void updateVehicle()
+{
+    char num[20];
+    int index;
+
+    printf("Enter Vehicle Number to update: ");
+    readString(num, sizeof(num));
+
+    index = searchIndex(num);
+
+    if (index == -1)
+    {
+        printf("Vehicle not found!\n");
+        return;
+    }
+
+    printf("Enter New Owner Name: ");
+    readString(v[index].owner, sizeof(v[index].owner));
+
+    printf("Enter New Vehicle Type: ");
+    readString(v[index].type, sizeof(v[index].type));
+
+    printf("Enter New Vehicle Model: ");
+    readString(v[index].model, sizeof(v[index].model));
+
+    printf("Enter New Service Type: ");
+    readString(v[index].service, sizeof(v[index].service));
+
+    printf("Enter New Service Charge: ");
+    scanf("%f", &v[index].charge);
+    getchar();
+
+    while (v[index].charge < 0)
+    {
+        printf("Charge cannot be negative. Enter again: ");
+        scanf("%f", &v[index].charge);
+        getchar();
+    }
+
+    printf("Vehicle details updated successfully!\n");
+}
+
+/* Function to delete vehicle */
+void deleteVehicle()
+{
+    char num[20];
+    int index, i;
+
+    printf("Enter Vehicle Number to delete: ");
+    readString(num, sizeof(num));
+
+    index = searchIndex(num);
+
+    if (index == -1)
+    {
+        printf("Vehicle not found!\n");
+        return;
+    }
+
+    for (i = index; i < count - 1; i++)
+    {
+        v[i] = v[i + 1];
+    }
+
+    count--;
+
+    printf("Vehicle deleted successfully!\n");
+}
+
+/* Separate function to complete service */
+void completeService()
+{
+    char num[20];
+    int index;
+
+    printf("Enter Vehicle Number: ");
+    readString(num, sizeof(num));
+
+    index = searchIndex(num);
+
+    if (index == -1)
+    {
+        printf("Vehicle not found!\n");
+        return;
+    }
+
+    strcpy(v[index].status, "Completed");
+
+    printf("Service completed successfully!\n");
+}
+
+/* Function to display pending services */
+void pendingServices()
+{
+    int i, found = 0;
+
+    for (i = 0; i < count; i++)
+    {
+        if (strcmp(v[i].status, "Pending") == 0)
+        {
+            displayOne(i);
+            found = 1;
+        }
+    }
+
+    if (found == 0)
+        printf("No pending services!\n");
+}
+
+/* Function to calculate total revenue */
+void totalRevenue()
+{
+    int i;
+    float total = 0;
+
+    for (i = 0; i < count; i++)
+    {
+        if (strcmp(v[i].status, "Completed") == 0)
+        {
+            total = total + v[i].charge;
+        }
+    }
+
+    printf("Total Revenue = Rs. %.2f\n", total);
+}
+
+/* Function to count vehicle types */
+void vehicleTypeCount()
+{
+    int i, cars = 0, bikes = 0, others = 0;
+
+    for (i = 0; i < count; i++)
+    {
+        if (strcmp(v[i].type, "Car") == 0 ||
+            strcmp(v[i].type, "car") == 0)
+            cars++;
+
+        else if (strcmp(v[i].type, "Bike") == 0 ||
+                 strcmp(v[i].type, "bike") == 0)
+            bikes++;
+
+        else
+            others++;
+    }
+
+    printf("\nCars  : %d", cars);
+    printf("\nBikes : %d", bikes);
+    printf("\nOthers: %d\n", others);
+}
+
+/* Function to find highest service charge */
+void highestCharge()
+{
+    int i, max = 0;
+
+    if (count == 0)
+    {
+        printf("No vehicle records found!\n");
+        return;
+    }
+
+    for (i = 1; i < count; i++)
+    {
+        if (v[i].charge > v[max].charge)
+            max = i;
+    }
+
+    printf("\nVehicle with Highest Service Charge:\n");
+    displayOne(max);
+}
+
+/* Main function */
+int main()
+{
+    int choice;
+
+    do
+    {
+        printf("\n===== VEHICLE SERVICE MANAGEMENT SYSTEM =====\n");
+        printf("1. Add Vehicle\n");
+        printf("2. Display Vehicles\n");
+        printf("3. Search Vehicle\n");
+        printf("4. Update Vehicle\n");
+        printf("5. Delete Vehicle\n");
+        printf("6. Complete Service\n");
+        printf("7. Pending Services\n");
+        printf("8. Total Revenue\n");
+        printf("9. Vehicle Type Count\n");
+        printf("10. Highest Service Charge\n");
+        printf("11. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+
+        switch (choice)
+        {
+            case 1:
+                addVehicle();
+                break;
+
+            case 2:
+                displayVehicles();
+                break;
+
+            case 3:
+                searchVehicle();
+                break;
+
+            case 4:
+                updateVehicle();
+                break;
+
+            case 5:
+                deleteVehicle();
+                break;
+
+            case 6:
+                completeService();
+                break;
+
+            case 7:
+                pendingServices();
+                break;
+
+            case 8:
+                totalRevenue();
+                break;
+
+            case 9:
+                vehicleTypeCount();
+                break;
+
+            case 10:
+                highestCharge();
+                break;
+
+            case 11:
+                printf("Exiting program...\n");
+                break;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+    } while (choice != 11);
+
+    return 0;
+}
