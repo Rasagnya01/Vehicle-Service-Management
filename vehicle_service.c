@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-
 struct Vehicle
 {
     char number[20];
@@ -11,32 +10,23 @@ struct Vehicle
     float charge;
     char status[20];
 };
-
 struct Vehicle v[100];
 int count = 0;
-
-/* Function to read a string */
 void readString(char str[], int size)
 {
     fgets(str, size, stdin);
     str[strcspn(str, "\n")] = '\0';
 }
-
-/* Search vehicle using number */
 int searchIndex(char num[])
 {
     int i;
-
     for (i = 0; i < count; i++)
     {
         if (strcmp(v[i].number, num) == 0)
             return i;
     }
-
     return -1;
 }
-
-/* Function to add vehicle */
 void addVehicle()
 {
     char num[20];
@@ -46,30 +36,27 @@ void addVehicle()
         printf("Vehicle storage is full!\n");
         return;
     }
-
     printf("Enter Vehicle Number: ");
     readString(num, sizeof(num));
-
+    
     if (searchIndex(num) != -1)
     {
         printf("Vehicle number already exists!\n");
         return;
     }
-
     strcpy(v[count].number, num);
-
+    
     printf("Enter Owner Name: ");
     readString(v[count].owner, sizeof(v[count].owner));
-
     printf("Enter Vehicle Type (Car/Bike/Other): ");
+    
     readString(v[count].type, sizeof(v[count].type));
-
     printf("Enter Vehicle Model: ");
+    
     readString(v[count].model, sizeof(v[count].model));
-
     printf("Enter Service Type: ");
-    readString(v[count].service, sizeof(v[count].service));
 
+    readString(v[count].service, sizeof(v[count].service));
     printf("Enter Service Charge: ");
     scanf("%f", &v[count].charge);
     getchar();
@@ -87,8 +74,6 @@ void addVehicle()
 
     printf("Vehicle added successfully!\n");
 }
-
-/* Function to display one vehicle */
 void displayOne(int i)
 {
     printf("\nVehicle Number : %s", v[i].number);
@@ -99,26 +84,20 @@ void displayOne(int i)
     printf("\nService Charge : %.2f", v[i].charge);
     printf("\nService Status : %s\n", v[i].status);
 }
-
-/* Function to display all vehicles */
 void displayVehicles()
 {
     int i;
-
     if (count == 0)
     {
         printf("No vehicle records found!\n");
         return;
     }
-
     for (i = 0; i < count; i++)
     {
         printf("\n--- Vehicle %d ---", i + 1);
         displayOne(i);
     }
 }
-
-/* Function to search vehicle */
 void searchVehicle()
 {
     char num[20];
@@ -126,16 +105,12 @@ void searchVehicle()
 
     printf("Enter Vehicle Number to search: ");
     readString(num, sizeof(num));
-
     index = searchIndex(num);
-
     if (index == -1)
         printf("Vehicle not found!\n");
     else
         displayOne(index);
 }
-
-/* Function to update vehicle details */
 void updateVehicle()
 {
     char num[20];
@@ -151,7 +126,6 @@ void updateVehicle()
         printf("Vehicle not found!\n");
         return;
     }
-
     printf("Enter New Owner Name: ");
     readString(v[index].owner, sizeof(v[index].owner));
 
@@ -167,71 +141,52 @@ void updateVehicle()
     printf("Enter New Service Charge: ");
     scanf("%f", &v[index].charge);
     getchar();
-
     while (v[index].charge < 0)
     {
         printf("Charge cannot be negative. Enter again: ");
         scanf("%f", &v[index].charge);
         getchar();
     }
-
     printf("Vehicle details updated successfully!\n");
 }
-
-/* Function to delete vehicle */
 void deleteVehicle()
 {
     char num[20];
     int index, i;
-
     printf("Enter Vehicle Number to delete: ");
     readString(num, sizeof(num));
-
     index = searchIndex(num);
-
     if (index == -1)
     {
         printf("Vehicle not found!\n");
         return;
     }
-
     for (i = index; i < count - 1; i++)
     {
         v[i] = v[i + 1];
     }
-
     count--;
-
     printf("Vehicle deleted successfully!\n");
 }
-
-/* Separate function to complete service */
 void completeService()
 {
     char num[20];
     int index;
-
     printf("Enter Vehicle Number: ");
     readString(num, sizeof(num));
-
     index = searchIndex(num);
-
     if (index == -1)
     {
         printf("Vehicle not found!\n");
         return;
     }
-
     strcpy(v[index].status, "Completed");
 
     printf("Service completed successfully!\n");
 }
-
-/* Function to display pending services */
 void pendingServices()
 {
     int i, found = 0;
-
     for (i = 0; i < count; i++)
     {
         if (strcmp(v[i].status, "Pending") == 0)
@@ -240,12 +195,9 @@ void pendingServices()
             found = 1;
         }
     }
-
     if (found == 0)
         printf("No pending services!\n");
 }
-
-/* Function to calculate total revenue */
 void totalRevenue()
 {
     int i;
@@ -258,11 +210,8 @@ void totalRevenue()
             total = total + v[i].charge;
         }
     }
-
     printf("Total Revenue = Rs. %.2f\n", total);
 }
-
-/* Function to count vehicle types */
 void vehicleTypeCount()
 {
     int i, cars = 0, bikes = 0, others = 0;
@@ -280,17 +229,13 @@ void vehicleTypeCount()
         else
             others++;
     }
-
     printf("\nCars  : %d", cars);
     printf("\nBikes : %d", bikes);
     printf("\nOthers: %d\n", others);
 }
-
-/* Function to find highest service charge */
 void highestCharge()
 {
     int i, max = 0;
-
     if (count == 0)
     {
         printf("No vehicle records found!\n");
@@ -302,12 +247,9 @@ void highestCharge()
         if (v[i].charge > v[max].charge)
             max = i;
     }
-
     printf("\nVehicle with Highest Service Charge:\n");
     displayOne(max);
 }
-
-/* Main function */
 int main()
 {
     int choice;
@@ -381,7 +323,7 @@ int main()
                 printf("Invalid choice! Try again.\n");
         }
 
-    } while (choice != 11);
+    }while (choice != 11);
 
     return 0;
 }
