@@ -31,3 +31,13 @@ A menu-driven C programming project designed to manage vehicle service records.
 
 ## Project Type
 First-year B.Tech CSE academic mini project.
+
+## Screenshots
+### Screenshot 1
+![Screenshot 1](Screenshot%202026-11-18%20153829.png)
+### Screenshot 2
+![Screenshot 2](Screenshot%202026-11-18%20153941.png)
+### Screenshot 3
+![Screenshot 3](Screenshot%202026-11-18%20154212.png)
+### Screenshot 4
+![Screenshot 4](Screenshot%202026-11-18%20154246.png)
